@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Viseme LipSync</title>
+  <script src="https://aframe.io/releases/1.4.0/aframe.min.js"></script>
+</head>
+
+<body style="margin:0">
+<a-scene>
+  <a-assets>
+    <audio id="voice" src="voice.mp3" preload="auto"></audio>
+  </a-assets>
+
+  <a-entity id="avatar"
+    gltf-model="avatar.glb"
+    position="0 0 -2"
+    scale="1 1 1"
+    viseme-lipsync>
+  </a-entity>
+
+  <a-light type="ambient" intensity="1"></a-light>
+  <a-light type="directional" position="1 2 1"></a-light>
+  <a-camera position="0 1.6 0"></a-camera>
+</a-scene>
+
+<script>
+AFRAME.registerComponent('viseme-lipsync', {
+  init() {
+    const audio = document.querySelector('#voice');
+    const ctx = new (window.AudioContext || window.webkitAudioContext)();
+    const src = ctx.createMediaElementSource(audio);
+    const analyser = ctx.createAnalyser();
+    analyser.fftSize = 2048;
+    src.connect(analyser);
+    analyser.connect(ctx.destination);
+
+    const data = new Uint8Array(analyser.frequencyBinCount);
+
+    let mesh, dict, infl;
+    this.el.addEventListener('model-loaded', () => {
+      this.el.getObject3D('mesh').traverse(n => {
+        if (n.morphTargetDictionary && n.morphTargetInfluences) {
+          mesh = n;
+          dict = n.morphTargetDictionary;
+          infl = n.morphTargetInfluences;
+        }
+      });
+    });
+
+    const V = name => dict && dict[name] !== undefined ? dict[name] : -1;
+
+    const vis = {
+      aa: () => V('viseme_aa'),
+      ee: () => V('viseme_E'),
+      ii: () => V('viseme_I'),
+      oo: () => V('viseme_O'),
+      uu: () => V('viseme_U'),
+      sil: () => V('viseme_sil'),
+      open: () => V('mouthOpen')
+    };
+
+    const smooth = (i, v) => { if (i >= 0) infl[i] = infl[i]*0.6 + v*0.4; };
+
+    const animate = () => {
+      analyser.getByteFrequencyData(data);
+      const low = avg(0, 200);     // aa / oo
+      const mid = avg(200, 1200);  // ee / ii
+      const high = avg(1200, 4000);// ss / silence
+
+      // reset
+      Object.values(vis).forEach(f => { const i=f(); if(i>=0) infl[i]=0; });
+
+      if (high < 0.02) smooth(vis.sil(), 1);
+      smooth(vis.aa(), clamp(low*1.8));
+      smooth(vis.ee(), clamp(mid*1.4));
+      smooth(vis.ii(), clamp(mid*1.2));
+      smooth(vis.oo(), clamp(low*1.2));
+      smooth(vis.uu(), clamp(low));
+      smooth(vis.open(), clamp(low*1.6));
+
+      requestAnimationFrame(animate);
+    };
+
+    const avg = (a,b) => {
+      let s=0,c=0;
+      for(let i=a;i<b && i<data.length;i++){ s+=data[i]; c++; }
+      return (s/c)/255;
+    };
+    const clamp = v => Math.max(0, Math.min(1, v));
+
+    // click to start (browser policy)
+    window.addEventListener('click', async () => {
+      await ctx.resume();
+      audio.play();
+      animate();
+    }, { once:true });
+  }
+});
+</script>
+</body>
+</html>
