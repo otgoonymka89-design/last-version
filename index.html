@@ -2,8 +2,9 @@
 <html>
 <head>
   <meta charset="utf-8">
-  <title>Viseme LipSync</title>
+  <title>Viseme LipSync + Idle</title>
   <script src="https://aframe.io/releases/1.4.0/aframe.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/aframe-extras@6.1.1/dist/aframe-extras.min.js"></script>
 </head>
 
 <body style="margin:0">
@@ -12,13 +13,16 @@
     <audio id="voice" src="voice.mp3" preload="auto"></audio>
   </a-assets>
 
- <a-entity id="avatar"
+  <!-- Avatar with Idle + Viseme LipSync -->
+  <a-entity id="avatar"
     gltf-model="avatar.glb"
     position="0 0 -2"
     scale="1 1 1"
+    animation-mixer="clip: Idle; loop: repeat"
     viseme-lipsync>
   </a-entity>
 
+  <!-- Lights & Camera -->
   <a-light type="ambient" intensity="1"></a-light>
   <a-light type="directional" position="1 2 1"></a-light>
   <a-camera position="0 1.6 0"></a-camera>
@@ -71,13 +75,14 @@ AFRAME.registerComponent('viseme-lipsync', {
       // reset
       Object.values(vis).forEach(f => { const i=f(); if(i>=0) infl[i]=0; });
 
+      // viseme lip-sync (монголд тааруулсан)
       if (high < 0.02) smooth(vis.sil(), 1);
-      smooth(vis.aa(), clamp(low*1.8));
-      smooth(vis.ee(), clamp(mid*1.4));
-      smooth(vis.ii(), clamp(mid*1.2));
-      smooth(vis.oo(), clamp(low*1.2));
-      smooth(vis.uu(), clamp(low));
-      smooth(vis.open(), clamp(low*1.6));
+      smooth(vis.aa(), clamp(low*2.6));
+      smooth(vis.ee(), clamp(mid*1.8));
+      smooth(vis.ii(), clamp(mid*1.6));
+      smooth(vis.oo(), clamp(low*2.2));
+      smooth(vis.uu(), clamp(low*2.0));
+      smooth(vis.open(), clamp(low*2.8));
 
       requestAnimationFrame(animate);
     };
@@ -89,7 +94,7 @@ AFRAME.registerComponent('viseme-lipsync', {
     };
     const clamp = v => Math.max(0, Math.min(1, v));
 
-    // click to start (browser policy)
+    // click to start
     window.addEventListener('click', async () => {
       await ctx.resume();
       audio.play();
@@ -99,8 +104,4 @@ AFRAME.registerComponent('viseme-lipsync', {
 });
 </script>
 </body>
-
 </html>
-
-
-
