@@ -58,11 +58,11 @@ AFRAME.registerComponent('viseme-lipsync', {
                     // Зүүн гарны яснууд
                     if (name.includes('leftarm') || name.includes('lupperarm') || name.includes('left_arm') || name.includes('l_shoulder')) {
                         // 70 градус орчим доош нь (Radian-аар)
-                        node.rotation.x = 1; 
+                        node.rotation.x = 1.5; 
                     }
                     // Баруун гарны яснууд
                     if (name.includes('rightarm') || name.includes('rupperarm') || name.includes('right_arm') || name.includes('r_shoulder')) {
-                        node.rotation.x = 1;
+                        node.rotation.x = 1.5;
                     }
                 }
 
@@ -124,6 +124,7 @@ AFRAME.registerComponent('viseme-lipsync', {
 </script>
 </body>
 </html>
+
 
 
 
