@@ -69,22 +69,7 @@ AFRAME.registerComponent('viseme-lipsync', {
                     if (rightShoulder) rightShoulder.rotation.z = 0.2;
                     }
                 }
-          // 2. Хуруунуудыг засах (Энгийн хүн шиг хагас нугалсан байдалд)
-                const fingers = [
-                'Thumb', 'Index', 'Middle', 'Ring', 'Pinky'
-                ];
-     fingers.forEach(finger => {
-        // Зүүн гар
-        const leftFinger = model.getObjectByName(`LeftHand${finger}1`);
-        if (leftFinger) leftFinger.rotation.z = 0.1; // Бага зэрэг дотогш нугалах
-
-        // Баруун гар
-        const rightFinger = model.getObjectByName(`RightHand${finger}1`);
-        if (rightFinger) rightFinger.rotation.z = -0.1;
-    });
-
-    scene.add(model);
-});
+         
                 // LipSync Morph олох
                 if (node.morphTargetDictionary && node.morphTargetInfluences) {
                     mesh = node;
@@ -143,6 +128,7 @@ AFRAME.registerComponent('viseme-lipsync', {
 </script>
 </body>
 </html>
+
 
 
 
