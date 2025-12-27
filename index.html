@@ -49,16 +49,29 @@ AFRAME.registerComponent('viseme-lipsync', {
                 this.el.setAttribute('animation-mixer', { clip: idleAnim.name, loop: 'repeat' });
             }
 
-            // 2. МӨР БУУЛГАХ БОЛОН ХУРУУГ ЭНГИЙН БОЛГОХ
+              // 2. ГАРЫГ ХҮЧЭЭР ДООШЛУУЛАХ (A-POSE ЗАСАХ)
             obj.traverse(node => {
                 if (node.isBone) {
-                    const name = node.name.toLowerCase();
+                   const name = node.name.toLowerCase();
+
+                    // Зүүн гарны яснууд
+
+                    if (name.includes('leftarm') || name.includes('lupperarm') || name.includes('left_arm') || name.includes('l_shoulder')) {
+
+                        // 70 градус орчим доош нь (Radian-аар)
+
+                        node.rotation.x = 1.5; 
+
                     }
-                    // Гарыг байгалийн байдалд оруулах (A-Pose)
-                    if (name.includes('arm') || name.includes('upperarm')) {
-                        if (name.includes('left') || name.startsWith('l_')) node.rotation.x = -1.3;
-                        if (name.includes('right') || name.startsWith('r_')) node.rotation.x =-1.3;
+
+                    // Баруун гарны яснууд
+
+                    if (name.includes('rightarm') || name.includes('rupperarm') || name.includes('right_arm') || name.includes('r_shoulder')) {
+
+                        node.rotation.x = 1.5;
+
                     }
+
                 }
          
                 if (node.morphTargetDictionary && node.morphTargetInfluences) {
@@ -114,3 +127,4 @@ AFRAME.registerComponent('viseme-lipsync', {
 </script>
 </body>
 </html>
+
