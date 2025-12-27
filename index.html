@@ -64,10 +64,6 @@ AFRAME.registerComponent('viseme-lipsync', {
                     if (name.includes('rightarm') || name.includes('rupperarm') || name.includes('right_arm') || name.includes('r_shoulder')) {
                         node.rotation.x = 1.5;
                     }
-                    // Бага зэрэг доошлуулна
-                    if (leftShoulder) leftShoulder.rotation.z = -0.2; // Бага зэрэг доошлуулна
-                    if (rightShoulder) rightShoulder.rotation.z = 0.2;
-                    }
                 }
          
                 // LipSync Morph олох
@@ -128,6 +124,7 @@ AFRAME.registerComponent('viseme-lipsync', {
 </script>
 </body>
 </html>
+
 
 
 
