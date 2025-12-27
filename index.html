@@ -55,10 +55,6 @@ AFRAME.registerComponent('viseme-lipsync', {
             obj.traverse(node => {
                 if (node.isBone) {
                     const name = node.name.toLowerCase();
-                    // Бага зэрэг доошлуулна
-                    if (leftShoulder) leftShoulder.rotation.z = -0.2; // Бага зэрэг доошлуулна
-                    if (rightShoulder) rightShoulder.rotation.z = 0.2;
-                    }
                     // Зүүн гарны яснууд
                     if (name.includes('leftarm') || name.includes('lupperarm') || name.includes('left_arm') || name.includes('l_shoulder')) {
                         // 70 градус орчим доош нь (Radian-аар)
@@ -132,6 +128,7 @@ AFRAME.registerComponent('viseme-lipsync', {
 </script>
 </body>
 </html>
+
 
 
 
